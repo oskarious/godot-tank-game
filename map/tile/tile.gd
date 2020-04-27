@@ -15,8 +15,8 @@ var tile_position: Vector2
 func _ready():
 	pass # Replace with function body.
 
-func get_movement_cost_from_type(type: int):
-	match(type):
+func get_movement_cost_from_type(_type: int):
+	match(_type):
 		TileType.BUILDING,TileType.WATER:
 			return -1
 		TileType.GRASS:
