@@ -8,8 +8,11 @@ export(float) var tile_size;
 var tiles = [];
 
 func _ready():
-	var map_image = generate_voronoi_diagram(map_size, 15)
+	var map_image = generate_voronoi_diagram(map_size, 64)
 	map_image.lock()
+	
+	var tile_map: TileMap = $TileMap
+	var tile_set: TileSet = tile_map.get_tileset()
 	
 	for x in range(map_size.x):
 		tiles.append([])
@@ -19,16 +22,19 @@ func _ready():
 		var pos = Vector2(x * tile_size, 0)
 		
 		for y in range(map_size.y):
-			var tile = tile_prefab.instance()
 			pos.y = y * tile_size
 			
-			tile.position = pos
-			tile.name = "Tile{x}-{y}".format({"x": pos.x, "y": pos.y})
-			tiles[x][y] = tile;
-			tile.type = tile.get_tile_type_from_color(map_image.get_pixel(x,y))
+			var tile = tile_prefab.instance()
 			
-			add_child(tile)
-				
+			tile.tile_position = pos
+			tile.name = "Tile{x}-{y}".format({"x": pos.x, "y": pos.y})
+			tile.type = tile.get_tile_type_from_color(map_image.get_pixel(x,y))
+			tile.movement_cost = tile.get_movement_cost_from_type(tile.type)
+			
+			tile_map.set_cell(x,y, tile_set.find_tile_by_name(tile.TileType.keys()[tile.type]))
+			
+			tiles[x][y] = tile;
+			
 	map_image.unlock()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -48,9 +54,10 @@ func generate_voronoi_diagram(imgSize : Vector2, num_cells: int):
 		points.push_back(Vector2(int(randf()*img.get_size().x), int(randf()*img.get_size().y)))
 
 		randomize()
-		var colorPossibilities = [ Color.blue, Color.red, Color.green, Color.purple]
+		var colorPossibilities = [ Color.blue, Color.red, Color.green, Color.yellow]
 #		var colorPossibilities = [ Color.blue, Color.red, Color.green, Color.purple, Color.yellow, Color.orange]
 		colors.push_back(colorPossibilities[randi()%colorPossibilities.size()])
+		
 
 	for y in range(img.get_size().y):
 		for x in range(img.get_size().x):
