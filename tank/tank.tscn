@@ -1,17 +1,26 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://tank/sprites/colored_transparent.png" type="Texture" id=1]
+[ext_resource path="res://tank/tank.gd" type="Script" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 6.22907, 7.39849 )
+extents = Vector2( 8, 8 )
 
 [node name="Tank" type="Area2D"]
+script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 8, 8 )
 shape = SubResource( 1 )
 one_way_collision_margin = 0.0
 
 [node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 8, 8 )
 texture = ExtResource( 1 )
 region_enabled = true
-region_rect = Rect2( 241, 375, 10, 14 )
+region_rect = Rect2( 238, 374, 16, 16 )
+
+[node name="Line2D" type="Line2D" parent="."]
+position = Vector2( 16, 16 )
+width = 5.0
+default_color = Color( 0.4, 0.501961, 1, 1 )

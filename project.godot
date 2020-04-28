@@ -13,9 +13,27 @@ _global_script_classes=[ {
 "class": "GitAPI",
 "language": "NativeScript",
 "path": "res://git_api.gdns"
+}, {
+"base": "Node2D",
+"class": "Map",
+"language": "GDScript",
+"path": "res://map/map.gd"
+}, {
+"base": "Node",
+"class": "Pathfinding",
+"language": "GDScript",
+"path": "res://map/Pathfinding.gd"
+}, {
+"base": "Node",
+"class": "Tile",
+"language": "GDScript",
+"path": "res://map/tile/tile.gd"
 } ]
 _global_script_class_icons={
-"GitAPI": ""
+"GitAPI": "",
+"Map": "",
+"Pathfinding": "",
+"Tile": ""
 }
 
 [application]

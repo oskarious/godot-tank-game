@@ -1,10 +1,12 @@
 extends Node
+class_name Tile
 
 enum TileType {
-	GRASS
-	WATER
-	WOODS
-	BUILDING
+	GRASS # GREEN
+	WATER # BLUE
+	WOODS # YELLOW
+	BUILDING # RED
+	ROAD
 	VOID
 }
 
@@ -17,12 +19,16 @@ func _ready():
 
 func get_movement_cost_from_type(_type: int):
 	match(_type):
-		TileType.BUILDING,TileType.WATER:
-			return -1
-		TileType.GRASS:
+		TileType.WATER:
+			return 9999
+		TileType.ROAD:
 			return 1
+		TileType.GRASS:
+			return 2
 		TileType.WOODS:
 			return 3
+		TileType.BUILDING:
+			return 4
 	return 1
 
 func get_tile_type_from_color(color: Color):
