@@ -97,22 +97,26 @@ func generate_roads():
 			sorted.push_back(t)
 		_set_tile(t, Tile.TileType.ROAD)
 	
+	sorted.insert(0, blue_start)
 	_set_tile(blue_start, Tile.TileType.ROAD)
+	
 	sorted.push_back(red_start)
 	_set_tile(red_start, Tile.TileType.ROAD)
-		
-	var prev_node: Vector2 = blue_start
+
+	for i in range(sorted.size()-1):
+		_set_road_tile(sorted[i], sorted[i+1])
+	_set_road_tile(sorted[sorted.size()-1], sorted[sorted.size()-2])
 	
-	# Runs once too few times
-	for t in sorted:
-		for i in range(prev_node.y - t.y):
-			var tile = tiles[prev_node.x][t.y + i]
-			_set_tile(tile.tile_position, Tile.TileType.ROAD)
-		
-		for i in range(prev_node.x - t.x):
-			var tile = tiles[prev_node.x - i][t.y]
-			_set_tile(tile.tile_position, Tile.TileType.ROAD)
-		prev_node = t
+
+func _set_road_tile(prev_node: Vector2, t: Vector2):
+	for i in range(prev_node.y - t.y):
+		_set_tile(tiles[prev_node.x][t.y + i].tile_position, Tile.TileType.ROAD)
+	
+	var x_dir = prev_node.x - t.x
+	for i in abs(x_dir):
+		if(x_dir < 0):
+			i = -i
+		_set_tile(tiles[prev_node.x - i][t.y].tile_position, Tile.TileType.ROAD)
 
 func tile_to_world_space(x,y, half=false):
 	var mulX = tile_map.cell_size.x
