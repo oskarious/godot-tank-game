@@ -6,7 +6,7 @@ var astar = AStar2D.new()
 
 func add_tile(tile: Tile, map, idx: int):
 	astar.add_point(idx,
-		map.tile_coord_to_pixel_space(tile.tile_position.x, tile.tile_position.y), 
+		map.tile_to_world_space(tile.tile_position.x, tile.tile_position.y), 
 		tile.movement_cost)
 
 func connect_points(map):
@@ -20,4 +20,4 @@ func _get_point_at_position(pos: Vector2):
 	return astar.get_points()[pos.x+pos.y]
 
 func get_tiles_path(from: Vector2, to: Vector2):
-	return astar.get_point_path(astar.get_closest_point(to), astar.get_closest_point(from))
+	return astar.get_point_path(astar.get_closest_point(from), astar.get_closest_point(to))

@@ -24,3 +24,8 @@ region_rect = Rect2( 238, 374, 16, 16 )
 position = Vector2( 16, 16 )
 width = 5.0
 default_color = Color( 0.4, 0.501961, 1, 1 )
+
+[node name="moveEnd" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 408, 425, 16, 16 )
