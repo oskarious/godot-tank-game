@@ -24,6 +24,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://map/Pathfinding.gd"
 }, {
+"base": "Node2D",
+"class": "Player",
+"language": "GDScript",
+"path": "res://player/player.gd"
+}, {
+"base": "Area2D",
+"class": "Tank",
+"language": "GDScript",
+"path": "res://tank/tank.gd"
+}, {
 "base": "Node",
 "class": "Tile",
 "language": "GDScript",
@@ -33,6 +43,8 @@ _global_script_class_icons={
 "GitAPI": "",
 "Map": "",
 "Pathfinding": "",
+"Player": "",
+"Tank": "",
 "Tile": ""
 }
 

@@ -18,6 +18,7 @@ var red_start: Vector2
 var center_town: Vector2
 
 func _ready():
+#	random.seed = "swag".hash()
 	random.randomize()
 	
 	var map_image = generate_voronoi_diagram(map_size, 64)
@@ -142,9 +143,16 @@ func tile_to_world(x,y, half=false):
 		
 	return Vector2(x * mulX, y * mulY)
 
+func world_to_tile(x,y):
+	return Vector2(x/tile_map.cell_size.x, y/tile_map.cell_size.y)
+
+func tile_at_world_space(pos: Vector2):
+	var tile_pos = world_to_tile(pos.x, pos.y)
+	return tiles[tile_pos.x][tile_pos.y]
+
 
 func in_map_bounds(pos: Vector2):
-	return pos.x < map_size.x && pos.y < map_size.y && pos.x > 0 && pos.y > 0
+	return pos.x < map_size.x && pos.y < map_size.y && pos.x >= 0 && pos.y >= 0
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
