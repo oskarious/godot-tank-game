@@ -65,6 +65,7 @@ func generate_towns():
 	var small_size = 3
 	var large_size = 5
 	
+	# Town positions in every 3rd on y, random on x
 	var yHalf = map_size.y / 2
 	var y1 = Vector2(random.randi_range(small_size, map_size.x - small_size), yHalf * 1.5)
 	var y2 = Vector2(random.randi_range(large_size, map_size.x - large_size), yHalf)
@@ -101,6 +102,7 @@ func generate_roads(town_positions: PoolVector2Array):
 	town_positions.push_back(red_start)
 	_set_tile(red_start, Tile.TileType.ROAD)
 
+	# For every node (spawns and town positions) build roads between them
 	for i in range(town_positions.size()-1):
 		_set_road_tile(town_positions[i], town_positions[i+1])
 	
@@ -109,16 +111,20 @@ func _set_road_tile(prev_node: Vector2, t: Vector2):
 	var corner_end = Vector2(prev_node.x, t.y)
 	var corner_flip_x = true
 	var corner_start = Vector2(t.x, t.y)
+
+	# Set vertical road tile
 	for i in range(prev_node.y - t.y):
 		_set_tile(tiles[prev_node.x][t.y + i].tile_position, Tile.TileType.ROAD)
 
+	# Set horizontal road tile
 	var x_dir = prev_node.x - t.x
 	for i in abs(x_dir):
 		if(x_dir < 0):
 			i = -i
 			corner_flip_x = false
 		_set_tile(tiles[prev_node.x - i][t.y].tile_position, Tile.TileType.ROAD, false, false, true)
-
+	
+	# Set corner road tiles
 	if(corner_start.x != corner_end.x):
 		_set_tile(corner_start, Tile.TileType.ROAD_CORNER, !corner_flip_x, true, false)
 		_set_tile(corner_end, Tile.TileType.ROAD_CORNER, corner_flip_x, false, true)
