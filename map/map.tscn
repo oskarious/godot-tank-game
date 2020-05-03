@@ -91,11 +91,24 @@ resource_local_to_scene = true
 4/shape_one_way_margin = 0.0
 4/shapes = [  ]
 4/z_index = 0
+5/name = "ROAD_CORNER"
+5/texture = ExtResource( 2 )
+5/tex_offset = Vector2( 0, 0 )
+5/modulate = Color( 1, 1, 1, 1 )
+5/region = Rect2( 255, 68, 16, 16 )
+5/tile_mode = 0
+5/occluder_offset = Vector2( 0, 0 )
+5/navigation_offset = Vector2( 0, 0 )
+5/shape_offset = Vector2( 0, 0 )
+5/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+5/shape_one_way = false
+5/shape_one_way_margin = 0.0
+5/shapes = [  ]
+5/z_index = 0
 
 [node name="Map" type="Node2D"]
 script = ExtResource( 1 )
 map_size = Vector2( 32, 32 )
-towns_amount = 1.0
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource( 4 )

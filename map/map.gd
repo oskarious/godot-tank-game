@@ -1,3 +1,4 @@
+#Generates the world map
 extends Node2D
 class_name Map
 
@@ -6,14 +7,11 @@ onready var tile_prefab = preload("res://map/tile/tile.tscn");
 onready var tile_map: TileMap = $TileMap
 
 export(Vector2) var map_size;
-export(float) var towns_amount;
-export(float) var town_min_distance;
 
 var tiles = [];
 var tile_set: TileSet;
 var random = RandomNumberGenerator.new()
 var pathfinding: Pathfinding
-var town_positions: PoolVector2Array
 
 var blue_start: Vector2
 var red_start: Vector2
@@ -50,73 +48,84 @@ func _ready():
 			
 	map_image.unlock()
 	
-	generate_towns()
+	generate_roads(generate_towns())
 	pathfinding.connect_points(self)
-	generate_roads()
 
 
-func _set_tile(position: Vector2, type: int):
+func _set_tile(position: Vector2, type: int, flip_x = false, flip_y = false, transpose = false):
 	var tile = tiles[position.x][position.y]
 	tile.type = type
 	tile.movement_cost = tile.get_movement_cost_from_type(tile.type)
-	tile_map.set_cell(position.x, position.y, tile_set.find_tile_by_name(tile.TileType.keys()[tile.type]))
+	tile_map.set_cell(position.x, position.y, tile_set.find_tile_by_name(tile.TileType.keys()[tile.type]), flip_x, flip_y, transpose)
+	return tile
 
 
 func generate_towns():
-	for _i in towns_amount:
-		var town_position = Vector2(random.randi_range(0, map_size.x), random.randi_range(0, map_size.y))
-		var size = 3 * random.randi_range(1,1)
-		
-		# TODO: Don't brute force position check for town generation
-		while(tiles[town_position.x-1][town_position.y-1].type == Tile.TileType.BUILDING 
-		|| !in_map_bounds(town_position) 
-		|| !in_map_bounds(Vector2(town_position.x - size, town_position.y - size))):
-			town_position = Vector2(random.randi_range(0, map_size.x), random.randi_range(0, map_size.y))
-			print("Oops, town already exists on position")
-		
-		town_positions.push_back(town_position)
+	var town_positions: PoolVector2Array = []
+	var small_size = 3
+	var large_size = 5
+	
+	var yHalf = map_size.y / 2
+	var y1 = Vector2(random.randi_range(small_size, map_size.x - small_size), yHalf * 1.5)
+	var y2 = Vector2(random.randi_range(large_size, map_size.x - large_size), yHalf)
+	var y3 = Vector2(random.randi_range(small_size, map_size.x - small_size), yHalf / 2)
+
+	town_positions.push_back(y1)
+	town_positions.push_back(y2)
+	town_positions.push_back(y3)
+
+	for t in town_positions:
+		var size = small_size
+		var diff = small_size - ceil(small_size/2)
+		if(t.y == yHalf):
+			size = large_size
+			diff = large_size - ceil(large_size/2)
 		
 		for x in range(size):
 			for y in range(size):
-				var pos = Vector2(town_position.x + x, town_position.y + y)
-				pos.x -= size
-				pos.y -= size
+				var pos = Vector2(t.x + x, t.y + y)
+				pos.x -= size - diff
+				pos.y -= size - diff
 				
 				var tile = tiles[pos.x][pos.y]
 				_set_tile(tile.tile_position, tile.TileType.BUILDING)
+
+	return town_positions
 		
 
 
-func generate_roads():
-	var sorted: PoolVector2Array = []
-	for t in town_positions:
-		# Borken
-		if(t != null && blue_start.distance_to(t) < blue_start.distance_to(t)):
-			sorted.insert(0,t)
-		else:
-			sorted.push_back(t)
-		_set_tile(t, Tile.TileType.ROAD)
-	
-	sorted.insert(0, blue_start)
+func generate_roads(town_positions: PoolVector2Array):
+	town_positions.insert(0, blue_start)
 	_set_tile(blue_start, Tile.TileType.ROAD)
-	
-	sorted.push_back(red_start)
+
+	town_positions.push_back(red_start)
 	_set_tile(red_start, Tile.TileType.ROAD)
 
-	for i in range(sorted.size()-1):
-		_set_road_tile(sorted[i], sorted[i+1])
-	_set_road_tile(sorted[sorted.size()-1], sorted[sorted.size()-2])
+	for t in town_positions:
+		print(t)
+		print(blue_start.y - t.y)
+
+	for i in range(town_positions.size()-1):
+		_set_road_tile(town_positions[i], town_positions[i+1])
 	
 
 func _set_road_tile(prev_node: Vector2, t: Vector2):
+	var corner_end = Vector2(prev_node.x, t.y)
+	var corner_flip_x = true
+	var corner_start = Vector2(t.x, prev_node.y)
 	for i in range(prev_node.y - t.y):
 		_set_tile(tiles[prev_node.x][t.y + i].tile_position, Tile.TileType.ROAD)
-	
+
 	var x_dir = prev_node.x - t.x
 	for i in abs(x_dir):
 		if(x_dir < 0):
 			i = -i
-		_set_tile(tiles[prev_node.x - i][t.y].tile_position, Tile.TileType.ROAD)
+			corner_flip_x = false
+		_set_tile(tiles[prev_node.x - i][t.y].tile_position, Tile.TileType.ROAD, false, false, true)
+
+	# _set_tile(corner_start, Tile.TileType.ROAD_CORNER, corner_flip_x, false, true)
+	_set_tile(corner_end, Tile.TileType.ROAD_CORNER, corner_flip_x, false, true)
+
 
 func tile_to_world_space(x,y, half=false):
 	var mulX = tile_map.cell_size.x

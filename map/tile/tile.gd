@@ -7,6 +7,7 @@ enum TileType {
 	WOODS # YELLOW
 	BUILDING # RED
 	ROAD
+	ROAD_CORNER
 	VOID
 }
 
@@ -21,7 +22,7 @@ func get_movement_cost_from_type(_type: int):
 	match(_type):
 		TileType.WATER:
 			return 9999
-		TileType.ROAD:
+		TileType.ROAD, TileType.ROAD_CORNER:
 			return 1
 		TileType.GRASS:
 			return 2
