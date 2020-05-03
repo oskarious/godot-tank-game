@@ -101,10 +101,6 @@ func generate_roads(town_positions: PoolVector2Array):
 	town_positions.push_back(red_start)
 	_set_tile(red_start, Tile.TileType.ROAD)
 
-	for t in town_positions:
-		print(t)
-		print(blue_start.y - t.y)
-
 	for i in range(town_positions.size()-1):
 		_set_road_tile(town_positions[i], town_positions[i+1])
 	
@@ -112,7 +108,7 @@ func generate_roads(town_positions: PoolVector2Array):
 func _set_road_tile(prev_node: Vector2, t: Vector2):
 	var corner_end = Vector2(prev_node.x, t.y)
 	var corner_flip_x = true
-	var corner_start = Vector2(t.x, prev_node.y)
+	var corner_start = Vector2(t.x, t.y)
 	for i in range(prev_node.y - t.y):
 		_set_tile(tiles[prev_node.x][t.y + i].tile_position, Tile.TileType.ROAD)
 
@@ -123,8 +119,9 @@ func _set_road_tile(prev_node: Vector2, t: Vector2):
 			corner_flip_x = false
 		_set_tile(tiles[prev_node.x - i][t.y].tile_position, Tile.TileType.ROAD, false, false, true)
 
-	# _set_tile(corner_start, Tile.TileType.ROAD_CORNER, corner_flip_x, false, true)
-	_set_tile(corner_end, Tile.TileType.ROAD_CORNER, corner_flip_x, false, true)
+	if(corner_start.x != corner_end.x):
+		_set_tile(corner_start, Tile.TileType.ROAD_CORNER, !corner_flip_x, true, false)
+		_set_tile(corner_end, Tile.TileType.ROAD_CORNER, corner_flip_x, false, true)
 
 
 func tile_to_world_space(x,y, half=false):
