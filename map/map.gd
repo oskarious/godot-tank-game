@@ -15,6 +15,7 @@ var pathfinding: Pathfinding
 
 var blue_start: Vector2
 var red_start: Vector2
+var center_town: Vector2
 
 func _ready():
 	random.randomize()
@@ -41,9 +42,10 @@ func _ready():
 			tile.tile_position = Vector2(x,y)
 			tile.name = "Tile{x}-{y}".format({"x": x, "y": y})
 			tile.type = tile.get_tile_type_from_color(map_image.get_pixel(x,y))
+			tile.astar_id = idx
 			tiles[x][y] = tile;
-			_set_tile(Vector2(x,y), tile.type)
 			pathfinding.add_tile(tile, self, idx)
+			_set_tile(Vector2(x,y), tile.type)
 			idx += 1
 			
 	map_image.unlock()
@@ -57,6 +59,7 @@ func _set_tile(position: Vector2, type: int, flip_x = false, flip_y = false, tra
 	tile.type = type
 	tile.movement_cost = tile.get_movement_cost_from_type(tile.type)
 	tile_map.set_cell(position.x, position.y, tile_set.find_tile_by_name(tile.TileType.keys()[tile.type]), flip_x, flip_y, transpose)
+	pathfinding.astar.set_point_weight_scale(tile.astar_id, tile.movement_cost)
 	return tile
 
 
@@ -68,11 +71,11 @@ func generate_towns():
 	# Town positions in every 3rd on y, random on x
 	var yHalf = map_size.y / 2
 	var y1 = Vector2(random.randi_range(small_size, map_size.x - small_size), yHalf * 1.5)
-	var y2 = Vector2(random.randi_range(large_size, map_size.x - large_size), yHalf)
+	center_town = Vector2(random.randi_range(large_size, map_size.x - large_size), yHalf)
 	var y3 = Vector2(random.randi_range(small_size, map_size.x - small_size), yHalf / 2)
 
 	town_positions.push_back(y1)
-	town_positions.push_back(y2)
+	town_positions.push_back(center_town)
 	town_positions.push_back(y3)
 
 	for t in town_positions:
@@ -130,7 +133,7 @@ func _set_road_tile(prev_node: Vector2, t: Vector2):
 		_set_tile(corner_end, Tile.TileType.ROAD_CORNER, corner_flip_x, false, true)
 
 
-func tile_to_world_space(x,y, half=false):
+func tile_to_world(x,y, half=false):
 	var mulX = tile_map.cell_size.x
 	var mulY = tile_map.cell_size.y
 	if(half):

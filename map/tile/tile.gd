@@ -14,6 +14,7 @@ enum TileType {
 var type = TileType.GRASS
 var movement_cost = 1;
 var tile_position: Vector2
+var astar_id: int
 
 func _ready():
 	pass # Replace with function body.

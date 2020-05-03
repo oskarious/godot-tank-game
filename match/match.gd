@@ -15,19 +15,19 @@ func _ready():
 	map = $Map
 	
 	var b1 = tank_prefab.instance()
-	b1.position = map.blue_start
+	b1.position = map.tile_to_world(map.blue_start.x, map.blue_start.y)
 	b1.pathfinding = map.pathfinding
-	b1.get_node("Sprite").modulate = Color.blue
+	b1.set_tank_team(0)
 	add_child(b1)
 	
 	var r1 = tank_prefab.instance()
-	r1.position = map.red_start
+	r1.position = map.tile_to_world(map.red_start.x, map.red_start.y)
 	r1.pathfinding = map.pathfinding
-	r1.get_node("Sprite").self_modulate = Color.red
+	r1.set_tank_team(1)
 	add_child(r1)
 	
-	b1.path_to_point(0,0)
-	r1.path_to_point(0,0)
+	b1.path_to_point(map.tile_to_world(map.center_town.x, map.center_town.y))
+	r1.path_to_point(map.tile_to_world(map.center_town.x, map.center_town.y))
 	
 
 
