@@ -1,6 +1,9 @@
 extends Control
 class_name Player_hud
 
+signal move_clicked
+signal attack_clicked
+
 var tile_position: Label
 var tile_type: Label
 var tile_movement_cost: Label
@@ -33,19 +36,29 @@ func set_tile_data(tile: Tile):
 	tile_type.text = Tile.TileType.keys()[tile.type]
 	tile_movement_cost.text = String(tile.movement_cost)
 
-func set_tile_tank_data(tank: Tank):
+func set_tile_tank_data(tank: Tank, player: Player):
 	if tank:
 		tank_container.show()
-		attack.disabled = false
-		move.disabled = false
-		tank_team.text = String(tank.team)
-		tank_health.text = String(tank.health)
-		tank_movement_budget.text = String(tank.movement_budget)
+
+		move.disabled = tank.team != player.team
+		attack.disabled = tank.team != player.team
+		if tank.team == player.team:
+			tank_team.text = String(tank.team)
+			tank_health.text = String(tank.health)
+			tank_movement_budget.text = String(tank.movement_budget)
 	else:
 		tank_container.hide()
 		move.disabled = true
 		attack.disabled = true
 
-func _on_Player_tile_selected(tile: Tile):
+func _on_Player_tile_selected(player: Player, tile: Tile):
 	set_tile_data(tile)
-	set_tile_tank_data(tile.tank)
+	set_tile_tank_data(tile.tank, player)
+
+
+func _on_Move_pressed():
+	emit_signal("move_clicked")
+
+
+func _on_Attack_pressed():
+	emit_signal("attack_clicked")
