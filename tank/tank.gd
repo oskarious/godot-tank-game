@@ -3,10 +3,11 @@ extends Area2D
 class_name Tank
 
 export(int) var movement_budget = 10
+var team = 0
+var health = 100
 
 var pathfinding: Pathfinding
 var path: Array
-
 var map: Map
 
 # Called when the node enters the scene tree for the first time.
@@ -16,6 +17,7 @@ func _ready():
 	# pass
 	
 func set_tank_team(team: int):
+	self.team = team
 	var color = Color.blue
 	if(team == 1):
 		color = Color.red

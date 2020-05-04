@@ -1,6 +1,8 @@
 extends Node2D
 class_name Player
 
+signal tile_selected(tile)
+
 onready var tank_class = preload("res://tank/tank.gd")
 
 # Declare member variables here. Examples:
@@ -43,6 +45,7 @@ func select_tile():
 	if map.in_map_bounds(map.world_to_tile(mouse_pos.x, mouse_pos.y)):
 		var selected_tile = map.tile_at_world_space(mouse_pos)
 		selection_area.position = to_local(mouse_pos)
+		emit_signal("tile_selected", selected_tile)
 
 func tile_from_mouse():
 	var pos = get_global_mouse_position()

@@ -29,6 +29,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://player/player.gd"
 }, {
+"base": "Control",
+"class": "Player_hud",
+"language": "GDScript",
+"path": "res://player/hud/player_hud.gd"
+}, {
 "base": "Area2D",
 "class": "Tank",
 "language": "GDScript",
@@ -44,6 +49,7 @@ _global_script_class_icons={
 "Map": "",
 "Pathfinding": "",
 "Player": "",
+"Player_hud": "",
 "Tank": "",
 "Tile": ""
 }
@@ -57,6 +63,10 @@ config/icon="res://icon.png"
 [gdnative]
 
 singletons=[ "res://git_api.gdnlib" ]
+
+[locale]
+
+translations=PoolStringArray( "res://i18n/text.en.translation" )
 
 [rendering]
 

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://player/player.gd" type="Script" id=1]
+[ext_resource path="res://player/hud/player_hud.tscn" type="PackedScene" id=2]
 
 [node name="Player" type="Node2D"]
 script = ExtResource( 1 )
@@ -23,3 +24,8 @@ end_cap_mode = 1
 
 [node name="PlayerCam" type="Camera2D" parent="."]
 current = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PlayerHUD" parent="CanvasLayer" instance=ExtResource( 2 )]
+[connection signal="tile_selected" from="." to="CanvasLayer/PlayerHUD" method="_on_Player_tile_selected"]
