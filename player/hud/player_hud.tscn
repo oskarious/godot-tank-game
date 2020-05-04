@@ -14,6 +14,7 @@ __meta__ = {
 [node name="Infobar" type="HBoxContainer" parent="."]
 anchor_right = 1.0
 margin_bottom = 94.0
+alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -21,7 +22,7 @@ __meta__ = {
 [node name="TilePanel" type="PanelContainer" parent="Infobar"]
 margin_right = 386.0
 margin_bottom = 94.0
-size_flags_horizontal = 2
+size_flags_horizontal = 0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -116,11 +117,55 @@ margin_bottom = 24.0
 custom_fonts/font = ExtResource( 1 )
 text = "3"
 
+[node name="PlayerPanel" type="PanelContainer" parent="Infobar"]
+margin_left = 390.0
+margin_right = 636.0
+margin_bottom = 38.0
+size_flags_horizontal = 6
+size_flags_vertical = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tile Info VBox" type="VBoxContainer" parent="Infobar/PlayerPanel"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 239.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Position" type="HBoxContainer" parent="Infobar/PlayerPanel/Tile Info VBox"]
+margin_right = 232.0
+margin_bottom = 24.0
+
+[node name="Player team" type="Label" parent="Infobar/PlayerPanel/Tile Info VBox/Position"]
+margin_right = 196.0
+margin_bottom = 24.0
+custom_fonts/font = ExtResource( 1 )
+text = "GAME_TEXT_TEAM"
+
+[node name="Delim" type="Label" parent="Infobar/PlayerPanel/Tile Info VBox/Position"]
+margin_left = 200.0
+margin_right = 214.0
+margin_bottom = 24.0
+custom_fonts/font = ExtResource( 1 )
+text = ":"
+
+[node name="Player team data" type="Label" parent="Infobar/PlayerPanel/Tile Info VBox/Position"]
+margin_left = 218.0
+margin_right = 232.0
+margin_bottom = 24.0
+custom_fonts/font = ExtResource( 1 )
+text = "1"
+
 [node name="Tank Panel" type="PanelContainer" parent="Infobar"]
-margin_left = 596.0
-margin_right = 1024.0
+margin_left = 640.0
+margin_right = 1068.0
 margin_bottom = 94.0
-size_flags_horizontal = 2
+size_flags_horizontal = 0
 size_flags_stretch_ratio = 0.0
 __meta__ = {
 "_edit_use_anchors_": false
